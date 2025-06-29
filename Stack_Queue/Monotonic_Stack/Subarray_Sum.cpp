@@ -13,7 +13,7 @@ private:
                 stt.pop();
             }
 
-            ans[i] = stt.empty() ? -1 : stt.top();
+            ans[i] = stt.empty() ? n : stt.top();
             stt.push(i);
         }
         return ans;
