@@ -1,6 +1,7 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+// House Robber 1
 class Solution {
 private:
     int maxSumRecurssion(int idx, int sum, vector<int> &nums) {
@@ -52,7 +53,7 @@ private:
     }
 
 public:
-    int nonAdjacent(vector<int>& nums) {
+    int rob(vector<int>& nums) {
         vector<int> dp(nums.size(), -1);
         // return maxSumRecurssion(0, 0, nums);
         // return maxSumMemo(0, nums, dp);
@@ -63,6 +64,6 @@ public:
 
 int main() {
     vector<int> nums = {2, 1, 4, 9};
-    cout << Solution().nonAdjacent(nums) << endl;
+    cout << Solution().rob(nums) << endl;
     return 0;
 }
