@@ -1,6 +1,9 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+// 1.Express everything in terms of rows and columns
+// 2. Explore all the possible paths
+// 3. Sum up all ways / max or min
 class Solution {
 private:
     bool isValid(int row, int col, int m, int n) {

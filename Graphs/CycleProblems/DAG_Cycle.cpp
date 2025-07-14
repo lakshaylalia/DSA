@@ -3,6 +3,23 @@ using namespace std;
 
 class Solution{
 private:
+    bool dfs(int src, vector<int> &vis, vector<int> &pathVis, vector<int> adj[]){
+        vis[src] = 1;
+        pathVis[src] = 1;
+
+        for(auto itr : adj[src]){
+            if(!vis[itr]){
+                if(pathVis[itr]) {
+                    return true;
+                }
+                else if(dfs(itr, vis, pathVis, adj)) {
+                    return true;
+                }
+            }
+        }
+        pathVis[src] = 0;
+        return false;
+    }
     void bfs(vector<int> adj[], vector<int> &indegree, queue<int> &q, vector<int> &ans){
         while(!q.empty()){
             int node  = q.front();

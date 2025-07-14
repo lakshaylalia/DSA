@@ -16,8 +16,9 @@ class Solution {
         }
     }
     public:
-    vector < int > shortestPath(int N, int M, vector < vector < int >> & edges) {
+    vector<int> shortestPath(int N, int M, vector < vector < int >> & edges) {
         vector<vector<pair<int,int>>> adj(N);
+
         for(auto itr : edges){
             int u = itr[0], v = itr[1], wt = itr[2];
             adj[u].push_back({v, wt});
@@ -34,18 +35,20 @@ class Solution {
         for(int i = 0; i < N; i++){
             if(inDegree[i] == 0) q.push(i);
         }
+
         vector<int> topo;
         topoSort(adj, inDegree, topo, q);
+        
         vector<int> shortestPath(N, INT_MAX);
         shortestPath[0] = 0;
         for(int i : topo){
-        for(auto itr : adj[i]){
-           int v = itr.first, wt = itr.second;
-            if(shortestPath[i] != INT_MAX && shortestPath[i] + wt < shortestPath[v]){
-              shortestPath[v] = shortestPath[i] + wt;
+            for(auto itr : adj[i]){
+                int v = itr.first, wt = itr.second;
+                if(shortestPath[i] != INT_MAX && shortestPath[i] + wt < shortestPath[v]){
+                    shortestPath[v] = shortestPath[i] + wt;
+                }
             }
-    }
-}
+        }
 
         for(auto &itr : shortestPath){
             if(itr == INT_MAX) itr = -1;

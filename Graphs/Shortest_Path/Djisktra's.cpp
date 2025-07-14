@@ -5,9 +5,7 @@ class Dijisktra {
     public:
     // using priority_queue to store the distance and the node
     vector<int> shortestPath1(vector<vector<int>> adj[], int src, int V) {
-        vector<int> dis(V);
-        for(int i = 0; i < V; i++) dis[i] = 1e9;
-
+        vector<int> dis(V, 1e9);
         dis[src] = 0;
         priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
 
@@ -28,7 +26,8 @@ class Dijisktra {
         }
         return dis;
     }
-
+    
+    // using set to store the distance and the node
     vector<int> shortestPath2(vector<vector<int>> adj[], int src, int V) {
         vector<int> dis(V, 1e9);
         dis[src] = 0;

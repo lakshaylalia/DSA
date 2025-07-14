@@ -18,6 +18,24 @@ TreeNode* leastCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
     else if(p -> val > root -> val && q -> val > root -> val) return leastCommonAncestor(root -> right, p, q);
     return root;
 }
+
+TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+    if (root == NULL || root == p || root == q) {
+        return root;
+    }
+        
+    TreeNode* left = lowestCommonAncestor(root->left, p, q);
+    TreeNode* right = lowestCommonAncestor(root->right, p, q);
+        
+    if (left == NULL) {
+        return right;
+    } else if (right == NULL) {
+        return left;
+    } else {
+        return root;
+    }
+}
+
 int main() {
     TreeNode* root = new TreeNode(10);
     root->left = new TreeNode(5);
