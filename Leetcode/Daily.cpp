@@ -1,108 +1,75 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-class Solution {
-private:
-    int findNextIdx(int idx, vector<vector<int>> &events) {
-        int n = events.size();
-        int low = idx+1, high = n-1;
-        int ans = n;
-        int curr = events[idx][1];
-        while(low <= high) {
-            int mid = low + (high - low) / 2;
-            if(events[mid][0] > curr) {
-                ans = mid;
-                high = mid-1;
+
+int solve(int A, int B, int C) {
+    if (A == 0) {
+        return 0;
+    }
+
+    vector<long long> cells(A + 1, 0);
+    cells[1] = 1;
+    int MOD = 1000000007;
+    for (int day = 2; day <= A; ++day) {
+        if (day <= C) {
+            cells[day] = (cells[day - 1] * 2) % MOD;
+        } else {
+            int effective_day = (day - 1) % C + 1;
+            if (effective_day == 1) {
+                cells[day] = 1;
+            } else if (effective_day <= B) {
+                cells[day] = (cells[day - 1] * 2) % MOD;
             } else {
-                low = mid + 1;
+                cells[day] = 1;
             }
         }
-        return ans;
     }
+    return (int)cells[A];
+}
 
-    int maxValueRecurssive(int idx, int k, vector<vector<int>> &events) {
-        if(k == 0 || idx >= events.size()) {
-            return 0;
-        }
-        int skip = maxValueRecurssive(idx + 1, k, events);
+vector<int> Solve(vector<int> &A, vector<int> &B) {
+    unordered_map<int, int> bookCount;
+    multiset<int> countTracker;
+    vector<int> maxValues;
 
-        int nextIdx = idx + 1;
-        while(nextIdx < events.size() && events[nextIdx][0] <= events[idx][1]) {
-            nextIdx++;
-        }
-        int take = events[idx][2] + maxValueRecurssive(nextIdx, k - 1, events);
-        return max(take, skip);
-    }
-
-    int maxValueMemoization(int idx, int k, vector<vector<int>> &events, vector<vector<int>> &dp) {
-        if(k == 0 || idx >= events.size()) {
-            return 0;
-        }
-
-        if(dp[idx][k] != -1) {
-            return dp[idx][k];
-        }
-
-        int skip = maxValueMemoization(idx + 1, k, events, dp);
-        
-        int n = events.size();
-        // int nextIdx = idx + 1;
-        // while(nextIdx < n && events[nextIdx][0] <= events[idx][1]) {
-        //     nextIdx++;
-        // }
-        int nextIdx = findNextIdx(idx, events);
-        int take = events[idx][2] + maxValueMemoization(nextIdx, k - 1, events, dp);
-        return dp[idx][k] = max(take, skip); 
-    }
-
-    int maxValueTabulation(vector<vector<int>> &events, int k) {
-        int n =  events.size();
-        vector<vector<int>> dp(n+1, vector<int>(k+1, 0));
-        for(int i = n-1; i >= 0; i--) {
-            for(int j = 1; j <= k; j++) {
-                int skip = dp[i+1][j];
-                int take = events[i][2];
-                int nextIdx = findNextIdx(i, events);
-                take += dp[nextIdx][j-1];
-                dp[i][j] = max(take, skip);
+    for (size_t idx = 0; idx < A.size(); ++idx) {
+        int currentId = A[idx];
+        int delta = B[idx];
+        auto it = bookCount.find(currentId);
+        int oldCount = (it != bookCount.end()) ? it->second : 0;
+        if (oldCount > 0) {
+            auto pos = countTracker.find(oldCount);
+            if (pos != countTracker.end()) {
+                countTracker.erase(pos);
             }
         }
-        return dp[0][k];
+        int newCount = oldCount + delta;
+        bookCount[currentId] = newCount;
+        if (newCount > 0) {
+            countTracker.insert(newCount);
+        }
+
+        int currentMax = countTracker.empty() ? 0 : *countTracker.rbegin();
+        maxValues.push_back(currentMax);
     }
 
-    // int maxValueTabulationSpaceOptimized(vector<vector<int>> &events, int k) {
-    //     int n = events.size();
-    //     vector<int> prev(k+1, 0);
-    //     for(int i = n-1; i >= 0; i--) {
-    //         vector<int> curr(k+1, 0);
-    //         for(int j = 1; j <= k; j++) {
-    //             int skip = prev[j];
-    //             int take = events[i][2];
-    //             int nextIdx = findNextIdx(i, events);
-    //             if(nextIdx < n) {
-    //                 take += prev[j-1];
-    //             }
-    //             curr[j] = max(take, skip);
-    //         }
-    //         prev = curr;
-    //     }
-    //     return prev[k];
-    // }
-
-public:
-    int maxValue(vector<vector<int>>& events, int k) {
-        sort(events.begin(), events.end());
-        int n = events.size();
-        vector<vector<int>> dp(n, vector<int>(k+1, -1));
-        // return maxValueRecurssive(0, k, events);
-        // return maxValueMemoization(0, k, events, dp);
-        return maxValueTabulation(events, k);
-    }
-};
+    return maxValues;
+}
 
 int main() {
-    // vector<vector<int>> events = {{1,2,4},{3,4,3},{2,3,1}};
-    vector<vector<int>> events = {{1,1,1},{2,2,2},{3,3,3},{4,4,4}};
-    cout << Solution().maxValue(events, 3) << endl;
+    int t;
+    cin >> t;
+    while(t--) {
+        int A, B, C;
+        // Input values
+        cin >> A >> B >> C;
+        cout << solve(A, B, C) << endl;
+    }
+    // vector<int> A = {2, 3, 2, 1};
+    // vector<int >B = {3, 2 -3, 1};
+    // vector<int> ans =  Solve(A, B);
+    // for(auto itr : ans) {
+    //     cout << itr << " ";
+    // }
     return 0;
 }
