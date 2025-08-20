@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-class Solution {
+class Solution {  
 private:
     bool Recurssive(int i, int j, string &s, string &p) {
         if(i < 0) {
@@ -84,6 +84,7 @@ private:
         }
         return dp[n][m];
     }
+
 public:
     bool isMatch(string s, string p) {
         int n = s.size(), m = p.size();
